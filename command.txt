@@ -1,0 +1,1 @@
+Session ended, resume using 'kubectl attach curl-2421989462-zvoqh -c curl -i -t' command when the pod is running

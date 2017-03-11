@@ -1,0 +1,63 @@
+Link
+
+https://severalnines.com/blog/installing-kubernetes-cluster-minions-centos7-manage-pods-services
+fix 
+Have you tried what I suggested above by removing ServiceAccount from your kube-apiserver's flag: --admission-control, and restart your kube-apiserver?
+Error from server: error when creating "mysql.yaml": No API token found for service account "default", retry after the token is automatically created and added to the servi
+
+http://www.marcolenzo.eu/create-a-kubernetes-cluster-on-centos-7/
+http://accelazh.github.io/kubernetes/Play-With-Kubernetes-On-CentOS-7
+http://www.tothenew.com/blog/how-to-install-kubernetes-on-centos/
+http://www.medianetlab.gr/2016/12/ovs-dpdk-on-openstack-newton/
+
+---
+k8s and openstack 
+http://blog.kubernetes.io/2016/10/kubernetes-and-openstack-at-yahoo-japan.html
+https://www.mirantis.com/blog/making-openstack-production-ready-kubernetes-openstack-salt-part-1/
+
+
+http://alesnosek.com/blog/2016/06/26/deploying-kubernetes-on-openstack-using-heat/
+http://bderzhavets.blogspot.com/2016/08/attempt-to-reproduce-deploying.html
+https://kubernetes.io/docs/getting-started-guides/openstack-heat/
+
+
+
+- Pods allow you to keep related containers close in terms of the network and hardware
+infrastructure. Data can live near the application, so processing can be done without
+incurring a high latency from network traversal.
+
+- Labels give us another level of categorization, which becomes very helpful in terms of
+everyday operations and management. Similar to tags, labels can be used as the basis of
+service discovery as well as a useful grouping tool for day-to-day operations and
+management tasks.
+
+- Replication controllers (RCs), as the name suggests, manage the number of nodes that a
+pod and included container images run on. They ensure that an instance of an image is
+being run with the specific number of copies.
+
+- Health checks : Kubernetes provides two layers of health checking. First, in the form of HTTP or TCP
+checks, K8s can attempt to connect to a particular endpoint and give a status of healthy on
+a successful connection. Second, application-specific health checks can be performed
+using command line scripts.
+Kubernetes also supports health checks via simple TCP socket checks and also with
+custom command-line scripts.
+
+- Life cycle hooks or graceful shutdown :As you run into failures in real-life scenarios, you may find that you want to take
+additional action before containers are shutdown or right after they are started. Kubernetes
+actually provides life cycle hooks for just this kind of use case.
+Controller definition defines both a postStart and a preStop 
+action to take place before Kubernetes moves the container into the next stage of its life
+cycle
+
+- Application scheduling:
++ In the absence of all other constraints, 
+the scheduler will place new pods on nodes with the least number of other pods belonging
+to matching services or replication controllers.
++ Additionally, the scheduler provides the ability to add constraints based on resources
+available to the node. Today, that includes minimum CPU and memory allocations. In
+terms of Docker, these use the cpu-shares and memory limit flags under the covers.
++ Kubernetes will check a node for available
+resources. If a node does not meet all the constraints, it will move to the next. If no nodes
+can be found that meet the criteria, then we will see a scheduling error in the logs.
+
+- 
