@@ -1,3 +1,5 @@
+
+
 - ReplicationController :  
 + A ReplicationController ensures that a specified number of pod “replicas” are running at any one time.
 + If there are too many pods, it will kill some. If there are too few, the ReplicationController will start more. 
