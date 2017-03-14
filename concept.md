@@ -1,8 +1,16 @@
 
 
-- ReplicationController :  
-+ A ReplicationController ensures that a specified number of pod “replicas” are running at any one time.
-+ If there are too many pods, it will kill some. If there are too few, the ReplicationController will start more. 
+# ReplicationController :  
+```
+A ReplicationController ensures that a specified number of pod “replicas” are running at any one time.
+If there are too many pods, it will kill some. If there are too few, the ReplicationController will start more. 
+```
+
+- DaemonSet
++ A DaemonSet ensures that all (or some) nodes run a copy of a pod. As nodes are added to the cluster, pods are added to them. As nodes are removed from the cluster, those pods are garbage collected. Deleting a DaemonSet will clean up the pods it created.
++ Use a replication controller for stateless services, like frontends, where scaling up and down the number of replicas and rolling out updates are more important than controlling exactly which host the pod runs on. Use a Daemon Controller when it is important that a copy of a pod always run on all or certain hosts, and when it needs to start before other pods.
++ Normally, the machine that a pod runs on is selected by the Kubernetes scheduler. However, pods created by the Daemon controller have the machine already selected (.spec.nodeName is specified when the pod is created, so it is ignored by the scheduler). 
++ You cannot update a DaemonSet.
 
 - Labels
 + Labels are key/value pairs that are attached to objects, such as pods.
@@ -164,12 +172,38 @@
 
 + Cron Jobs: link crontab
 
-- 
+- SSL for container
++ Use secret tls to create secret, mount tls use mountPath
 
+- Init Containers
++ A Pod can have multiple Containers running apps within it, but it can also have one or more Init Containers, which are run before the app Containers are started.
++ Init Containers support all the fields and features of app Containers, including resource limits, volumes, and security settings. However, the resource requests and limits for an Init Container are handled slightly differently, which are documented in Resources below. Also, Init Containers do not support readiness probes because they must run to completion before the Pod can be ready.
++ They can contain and run utilities that are not desirable to include in the app Container image for security reasons.
++ They can contain utilities or custom code for setup that is not present in an app image. For example, there is no need to make an image FROM another image just to use a tool like sed, awk, python, or dig during setup.
++ The application image builder and deployer roles can work independently without the need to jointly build a single app image.
++ They use Linux namespaces so that they have different filesystem views from app Containers. Consequently, they can be given access to Secrets that app Containers are not able to access.
++ They run to completion before any app Containers start, whereas app Containers run in parallel, so Init Containers provide an easy way to block or delay the startup of app Containers until some set of preconditions are
 
+# Resource limit
+```
+CPU and memory are each a resource type. A resource type has a base unit. CPU is specified in units of cores, and memory is specified in units of bytes.
+Limits and requests for CPU resources are measured in cpu units. One cpu, in Kubernetes, is equivalent to:
+    1 AWS vCPU
+    1 GCP Core
+    1 Azure vCore
+    1 Hyperthread on a bare-metal Intel processor with Hyperthreading
+Limits and requests for memory are measured in bytes. You can express memory as a plain integer or as a fixed-point integer using one of these SI suffixes: E, P, T, G, M, K. You can also use the power-of-two equivalents: Ei, Pi, Ti, Gi, Mi, Ki. For example, the following represent roughly the same value:
+requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+        Each Container has a request of 0.25 cpu and 64MiB (226 bytes) of memory Each Container has a limit of 0.5 cpu and 128MiB of memory. 
+Each node has a maximum capacity for each of the resource types: the amount of CPU and memory it can provide for Pods. The scheduler ensures that, for each resource type, the sum of the resource requests of the scheduled Containers is less than the capacity of the node.
+```
 
-
-
+#. 
 
 
 

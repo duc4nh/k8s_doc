@@ -20,6 +20,11 @@ http://alesnosek.com/blog/2016/06/26/deploying-kubernetes-on-openstack-using-hea
 http://bderzhavets.blogspot.com/2016/08/attempt-to-reproduce-deploying.html
 https://kubernetes.io/docs/getting-started-guides/openstack-heat/
 
+----
+blog kubenetes
+https://acotten.com/post/1year-kubernetes
+https://deis.com/blog/2016/kubernetes-overview-pt-1/
+
 
 
 - Pods allow you to keep related containers close in terms of the network and hardware
