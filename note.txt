@@ -24,7 +24,11 @@ https://kubernetes.io/docs/getting-started-guides/openstack-heat/
 blog kubenetes
 https://acotten.com/post/1year-kubernetes
 https://deis.com/blog/2016/kubernetes-overview-pt-1/
+http://blog.traintracks.io/solving-the-stateful-service-problem-in-container-orchestration/
 
+-------
+repo k8s
+https://github.com/kubernetes/charts
 
 
 - Pods allow you to keep related containers close in terms of the network and hardware

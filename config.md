@@ -28,3 +28,7 @@ https://github.com/kubernetes/kubernetes/issues/42987
 http://www.dasblinkenlichten.com/kubernetes-101-external-access-into-the-cluster/
 
 https://kubernetes.io/docs/user-guide/services/#external-ips
+
+
+# kubenetes mysql 
+https://kubernetes.io/docs/tutorials/stateful-application/run-replicated-stateful-application/

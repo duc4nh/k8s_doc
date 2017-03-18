@@ -7,71 +7,71 @@ If there are too many pods, it will kill some. If there are too few, the Replica
 ```
 
 - DaemonSet
-+ A DaemonSet ensures that all (or some) nodes run a copy of a pod. As nodes are added to the cluster, pods are added to them. As nodes are removed from the cluster, those pods are garbage collected. Deleting a DaemonSet will clean up the pods it created.
-+ Use a replication controller for stateless services, like frontends, where scaling up and down the number of replicas and rolling out updates are more important than controlling exactly which host the pod runs on. Use a Daemon Controller when it is important that a copy of a pod always run on all or certain hosts, and when it needs to start before other pods.
-+ Normally, the machine that a pod runs on is selected by the Kubernetes scheduler. However, pods created by the Daemon controller have the machine already selected (.spec.nodeName is specified when the pod is created, so it is ignored by the scheduler). 
-+ You cannot update a DaemonSet.
+    + A DaemonSet ensures that all (or some) nodes run a copy of a pod. As nodes are added to the cluster, pods are added to them. As nodes are removed from the cluster, those pods are garbage collected. Deleting a DaemonSet will clean up the pods it created.
+    + Use a replication controller for stateless services, like frontends, where scaling up and down the number of replicas and rolling out updates are more important than controlling exactly which host the pod runs on. Use a Daemon Controller when it is important that a copy of a pod always run on all or certain hosts, and when it needs to start before other pods.
+    + Normally, the machine that a pod runs on is selected by the Kubernetes scheduler. However, pods created by the Daemon controller have the machine already selected (.spec.nodeName is specified when the pod is created, so it is ignored by the scheduler). 
+    + You cannot update a DaemonSet.
 
 - Labels
-+ Labels are key/value pairs that are attached to objects, such as pods.
-+ Example : "release" : "stable", "release" : "canary"
+    + Labels are key/value pairs that are attached to objects, such as pods.
+    + Example : "release" : "stable", "release" : "canary"
 
 - Selector
-+ Via a label selector, the client/user can identify a set of objects. The label selector is the core grouping primitive in Kubernetes.
-+ The selector tells Kubernetes which labels to use in finding pods to forward traffic for that service.
-+ The API currently supports two types of selectors: equality-based and set-based.
-+ Equality-based requirement :  environment = production , tier != frontend
-+ Set-based requirement : environment in (production, qa), tier notin (frontend, backend), !partition
+    + Via a label selector, the client/user can identify a set of objects. The label selector is the core grouping primitive in Kubernetes.
+    + The selector tells Kubernetes which labels to use in finding pods to forward traffic for that service.
+    + The API currently supports two types of selectors: equality-based and set-based.
+    + Equality-based requirement :  environment = production , tier != frontend
+    + Set-based requirement : environment in (production, qa), tier notin (frontend, backend), !partition
 
 - Service
-+ A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them - sometimes called a micro-service. 
-+ For Kubernetes-native applications, Kubernetes offers a simple Endpoints API that is updated whenever the set of Pods in a Service changes.
-+ For non-native applications, Kubernetes offers a virtual-IP-based bridge to Services which redirects to the backend Pods.
-+ When created, each Service is assigned a unique IP address (also called clusterIP). This address is tied to the lifespan of the Service, and will not change while the Service is alive. Pods can be configured to talk to the Service, and know that communication to the Service will be automatically load-balanced out to some pod that is a member of the Service.
+    + A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them - sometimes called a micro-service. 
+    + For Kubernetes-native applications, Kubernetes offers a simple Endpoints API that is updated whenever the set of Pods in a Service changes.
+    + For non-native applications, Kubernetes offers a virtual-IP-based bridge to Services which redirects to the backend Pods.
+    + When created, each Service is assigned a unique IP address (also called clusterIP). This address is tied to the lifespan of the Service, and will not change while the Service is alive. Pods can be configured to talk to the Service, and know that communication to the Service will be automatically load-balanced out to some pod that is a member of the Service.
 
 - Health check
-+ This is our core health check element. From there, we can specify httpGet , tcpScoket , or exec .
-+ Status codes between 200 and 399 are all considered healthy by the probe.
-+ Finally, initialDelaySeconds gives us the flexibility to delay health checks until the pod has finished initializing. timeoutSeconds is simply the timeout value for the probe.
-+ Liveness Probes : If the app never starts up or responds with an HTTP error code then Kubernetes will restart the pod. 
-+ Readiness Probes : Readiness probes are meant to check if your application is ready to serve traffic. If the readiness probe for your app fails, then that pod is removed from the endpoints that make up a service.
+    + This is our core health check element. From there, we can specify httpGet , tcpScoket , or exec .
+    + Status codes between 200 and 399 are all considered healthy by the probe.
+    + Finally, initialDelaySeconds gives us the flexibility to delay health checks until the pod has finished initializing. timeoutSeconds is simply the timeout value for the probe.
+    + Liveness Probes : If the app never starts up or responds with an HTTP error code then Kubernetes will restart the pod. 
+    + Readiness Probes : Readiness probes are meant to check if your application is ready to serve traffic. If the readiness probe for your app fails, then that pod is removed from the endpoints that make up a service.
 
 - Life cycle hooks or graceful shutdown
-+ Kubernetes actually provides life cycle hooks : take additional action before containers are shutdown or right after they are started.
+    + Kubernetes actually provides life cycle hooks : take additional action before containers are shutdown or right after they are started.
 
-- Application scheduling
-+ Scheduler will place new pods on nodes with the least number of other pods belonging to matching services or replication controllers.
-+ Additionally, the scheduler provides the ability to add constraints based on resources available to the node : cpu-shares and memory limit flags
-+ When additional constraints are defined, Kubernetes will check a node for available resources. If a node does not meet all the constraints, it will move to the next. If no nodes can be found that meet the criteria, then we will see a scheduling error in the logs.
+    - Application scheduling
+    + Scheduler will place new pods on nodes with the least number of other pods belonging to matching services or replication controllers.
+    + Additionally, the scheduler provides the ability to add constraints based on resources available to the node : cpu-shares and memory limit flags
+    + When additional constraints are defined, Kubernetes will check a node for available resources. If a node does not meet all the constraints, it will move to the next. If no nodes can be found that meet the criteria, then we will see a scheduling error in the logs.
 
 
 # Core Concepts – Networking, Storage, and Advanced Services
 
 - Kubernetes networking
-+ Networking in Kubernetes requires that each pod have its own IP address.
-+ Kubernetes does not allow the use of Network Address Translation (NAT) for container-to-container or for container-to-node (minion) traffic.
-+ K8s achieves this pod-wide IP magic by using a placeholder (pod infrastructure container)
-+ the pause container holds the networking namespace and IP address for the entire pod and can be used by all the containers running within.
+    + Networking in Kubernetes requires that each pod have its own IP address.
+    + Kubernetes does not allow the use of Network Address Translation (NAT) for container-to-container or for container-to-node (minion) traffic.
+    + K8s achieves this pod-wide IP magic by using a placeholder (pod infrastructure container)
+    + the pause container holds the networking namespace and IP address for the entire pod and can be used by all the containers running within.
 
 - Networking comparisons
-* Docker: 
-+ Deefault uses a bridged networking mode. In this mode, the container has its own networking namespace and is then bridged via virtual interfaces to the host (or node in the case of K8s) network.
-+ In the bridged mode, two containers can use the same IP range because they are completely isolated.
-+ Docker also supports a host mode, which allows the containers to use the host network stack. 
-+ Docker supports a container mode, which shares a network namespace between two containers. The containers will share the namespace and IP address, so containers cannot use the same ports.
-+ Connecting containers across two machines then requires Network Address Translation (NAT) and port mapping for communication.
+    * Docker: 
+        + Deefault uses a bridged networking mode. In this mode, the container has its own networking namespace and is then bridged via virtual interfaces to the host (or node in the case of K8s) network.
+        + In the bridged mode, two containers can use the same IP range because they are completely isolated.
+        + Docker also supports a host mode, which allows the containers to use the host network stack. 
+        + Docker supports a container mode, which shares a network namespace between two containers. The containers will share the namespace and IP address, so containers cannot use the same ports.
+        + Connecting containers across two machines then requires Network Address Translation (NAT) and port mapping for communication.
 
-* Docker plugins (libnetwork)
-+ This plugin allows networks to be created independent of the containers themselves. In this way, containers can join the same existing networks.
-+ It’s important to note that the plugin mechanism will allow a wide range of networking possibilities in Docker.
+    * Docker plugins (libnetwork)
+        + This plugin allows networks to be created independent of the containers themselves. In this way, containers can join the same existing networks.
+        + It’s important to note that the plugin mechanism will allow a wide range of networking possibilities in Docker.
 
-* Flannel
-+ Flannel gives a full subnet to each host/node enabling a similar pattern to the Kubernetes practice of a routable IP per pod or group of containers.
-+ Flannel includes an in-kernel VXLAN encapsulation mode for better performance and has an experimental multinetwork mode similar to the overlay Docker plugin.
+    * Flannel
+        + Flannel gives a full subnet to each host/node enabling a similar pattern to the Kubernetes practice of a routable IP per pod or group of containers.
+        + Flannel includes an in-kernel VXLAN encapsulation mode for better performance and has an experimental multinetwork mode similar to the overlay Docker plugin.
 
-* Project Calico
-+ Project Calico is a layer 3-based networking model that uses the built-in routing functions of the Linux kernel. Routes are propagated to virtual routers on each host via Border Gateway Protocol (BGP).
-+ Because it works at a lower level on the network stack, there is no need for additional NAT, tunneling, or overlays. It can interact directly with the underlying network infrastructure.
+    * Project Calico
+        + Project Calico is a layer 3-based networking model that uses the built-in routing functions of the Linux kernel. Routes are propagated to virtual routers on each host via Border Gateway Protocol (BGP).
+        + Because it works at a lower level on the network stack, there is no need for additional NAT, tunneling, or overlays. It can interact directly with the underlying network infrastructure.
 
 - Balanced design
 + It’s important to point out the balance Kubernetes is trying to achieve by placing the IP at the pod level.
@@ -205,12 +205,121 @@ Each node has a maximum capacity for each of the resource types: the amount of C
 
 #. 
 
+- The number and meanings of Pod phase values are tightly guarded. Other than what is documented here, nothing should be assumed about Pods that have a given phase value.
+    + Pending: The Pod has been accepted by the Kubernetes system, but one or more of the Container images has not been created. This includes time before being scheduled as well as time spent downloading images over the network, which could take a while.
+    + Running: The Pod has been bound to a node, and all of the Containers have been created. At least one Container is still running, or is in the process of starting or restarting.
+    + Succeeded: All Containers in the Pod have terminated in success, and will not be restarted.
+    + Failed: All Containers in the Pod have terminated, and at least one Container has terminated in failure. That is, the Container either exited with non-zero status or was terminated by the system.
+    + Unknown: For some reason the state of the Pod could not be obtained, typically due to an error in communicating with the host of the Pod
 
+- Life cycle hooks or graceful shutdown :As you run into failures in real-life scenarios, you may find that you want to take
+additional action before containers are shutdown or right after they are started. 
++ Kubernetes actually provides life cycle hooks for just this kind of use case.
++ Controller definition defines both a postStart and a preStop action to take place before Kubernetes moves the container into the next stage of its life cycle
 
+- Assigning Pods to Nodes
++ There are several ways to do this, and they all use label selectors to make the selection. Generally such constraints are unnecessary, as the scheduler will automatically do a reasonable placement 
++ Then, to add a label to the node you’ve chosen, run kubectl label nodes <node-name> <label-key>=<label-value>
++ You can verify that it worked by re-running kubectl get nodes --show-labels and checking that the node now has a label.
++ Node affinity is conceptually similar to nodeSelector – it allows you to constrain which nodes your pod is eligible to schedule on, based on labels on the node.
+- Inter-pod affinity and anti-affinity allow you to constrain which nodes your pod is eligible to schedule on based on labels on pods that are already running on the node rather than based on labels on nodes.
 
+- Exposing Pod Information to Containers Using a DownwardApiVolumeFile
++ This page shows how a Pod can use a DownwardAPIVolumeFile to expose information about itself to Containers running in the Pod. A DownwardAPIVolumeFile can expose Pod fields and Container fields.
+```
+The following information is available to Containers through environment variables and DownwardAPIVolumeFiles:
 
+    The node’s name
+    The Pod’s name
+    The Pod’s namespace
+    The Pod’s IP address
+    The Pod’s service account name
+    A Container’s CPU limit
+    A container’s CPU request
+    A Container’s memory limit
+    A Container’s memory request
 
+In addition, the following information is available through DownwardAPIVolumeFiles.
 
+    The Pod’s labels
+    The Pod’s annotations
+```
 
+- StatefulSets
+    + https://kubernetes.io/docs/tutorials/stateful-application/run-replicated-stateful-application/
+    + StatefulSets are valuable for applications that require one or more of the following.
 
+        Stable, unique network identifiers.
+        Stable, persistent storage.
+        Ordered, graceful deployment and scaling.
+        Ordered, graceful deletion and termination.
 
+```
+StatefulSet is a beta resource, not available in any Kubernetes release prior to 1.5.
+As with all alpha/beta resources, you can disable StatefulSet through the --runtime-config option passed to the apiserver.
+The storage for a given Pod must either be provisioned by a PersistentVolume Provisioner based on the requested storage class, or pre-provisioned by an admin.
+Deleting and/or scaling a StatefulSet down will not delete the volumes associated with the StatefulSet. This is done to ensure data safety, which is generally more valuable than an automatic purge of all related StatefulSet resources.
+StatefulSets currently require a Headless Service to be responsible for the network identity of the Pods. You are responsible for creating this Service.
+Updating an existing StatefulSet is currently a manual process
+```
+
+- Volume : On-disk files in a container are ephemeral, which presents some problems for non-trivial applications when running in containers. First, when a container crashes kubelet will restart it, but the files will be lost - the container starts with a clean state. Second, when running containers together in a Pod it is often necessary to share files between those containers.
++ Consequently, a volume outlives any containers that run within the Pod, and data is preserved across Container restarts. Of course, when a Pod ceases to exist, the volume will cease to exist, too. Perhaps more importantly than this, Kubernetes supports many type of volumes, and a Pod can use any number of them simultaneously.
+    * Types of Volumes
+        + emptyDir
+        + hostPath
+        + gcePersistentDisk
+        + awsElasticBlockStore
+        + nfs
+        + iscsi
+        + flocker
+        + glusterfs
+        + rbd
+        + cephfs
+        + gitRepo
+        + secret
+        + persistentVolumeClaim
+        + downwardAPI
+        + azureFileVolume
+        + azureDisk
+        + vsphereVolume
+        + Quobyte
+    * Using subPath
+        + Sometimes, it is useful to share one volume for multiple uses in a single pod. The volumeMounts.subPath property can be used to specify a sub-path inside the referenced volume instead of its root.
+
+- Persistent Volumes
++ A PersistentVolume (PV) is a piece of networked storage in the cluster that has been provisioned by an administrator. 
++ A PersistentVolumeClaim (PVC) is a request for storage by a user. It is similar to a pod. Pods consume node resources and PVCs consume PV resources. 
++ While PersistentVolumeClaims allow a user to consume abstract storage resources, it is common that users need PersistentVolumes with varying properties, such as performance, for different problems. 
++ A StorageClass provides a way for administrators to describe the “classes” of storage they offer. Different classes might map to quality-of-service levels, or to backup policies, or to arbitrary policies determined by the cluster administrators
+
+- Lifecycle of a volume and claim
++ PVs are resources in the cluster. PVCs are requests for those resources and also act as claim checks to the resource. The interaction between PVs and PVCs follows this lifecycle:
++ Provisioning : There are two ways PVs may be provisioned: statically or dynamically. 
+    + Static
+        + A cluster administrator creates a number of PVs. They carry the details of the real storage which is available for use by cluster users. They exist in the Kubernetes API and are available for consumption.
+    + Dynamic
+        + When none of the static PVs the administrator created matches a user’s PersistentVolumeClaim, the cluster may try to dynamically provision a volume specially for the PVC. This provisioning is based on StorageClasses: the PVC must request a class and the administrator must have created and configured that class in order for dynamic provisioning to occur. Claims that request the class "" effectively disable dynamic provisioning for themselves.
++ Binding
+    + A user creates, or has already created in the case of dynamic provisioning, a PersistentVolumeClaim with a specific amount of storage requested and with certain access modes. A control loop in the master watches for new PVCs, finds a matching PV (if possible), and binds them together. If a PV was dynamically provisioned for a new PVC, the loop will always bind that PV to the PVC. Otherwise, the user will always get at least what they asked for, but the volume may be in excess of what was requested. Once bound, PersistentVolumeClaim binds are exclusive, regardless of the mode used to bind them.
+
+    + Claims will remain unbound indefinitely if a matching volume does not exist. Claims will be bound as matching volumes become available. For example, a cluster provisioned with many 50Gi PVs would not match a PVC requesting 100Gi. The PVC can be bound when a 100Gi PV is added to the cluster.
++ Using
+    + Pods use claims as volumes. The cluster inspects the claim to find the bound volume and mounts that volume for a pod. For volumes which support multiple access modes, the user specifies which mode desired when using their claim as a volume in a pod.
+
+    + Once a user has a claim and that claim is bound, the bound PV belongs to the user for as long as they need it. Users schedule Pods and access their claimed PVs by including a persistentVolumeClaim in their Pod’s volumes block. See below for syntax details.
++ Releasing
+    + When a user is done with their volume, they can delete the PVC objects from the API which allows reclamation of the resource. The volume is considered “released” when the claim is deleted, but it is not yet available for another claim. The previous claimant’s data remains on the volume which must be handled according to policy.
++ Reclaiming
+    + The reclaim policy for a PersistentVolume tells the cluster what to do with the volume after it has been released of its claim. Currently, volumes can either be Retained, Recycled or Deleted. Retention allows for manual reclamation of the resource. For those volume plugins that support it, deletion removes both the PersistentVolume object from Kubernetes, as well as deleting the associated storage asset in external infrastructure (such as an AWS EBS, GCE PD, Azure Disk, or Cinder volume). Volumes that were dynamically provisioned are always deleted.
+    + Recycling
+    + If supported by appropriate volume plugin, recycling performs a basic scrub (rm -rf /thevolume/*) on the volume and makes it available again for a new claim.
+
+- Access mode
++ The access modes are:
+    + ReadWriteOnce – the volume can be mounted as read-write by a single node
+    + ReadOnlyMany – the volume can be mounted read-only by many nodes
+    + ReadWriteMany – the volume can be mounted as read-write by many nodes
++ Important! A volume can only be mounted using one access mode at a time, even if it supports many. 
+
+- 
