@@ -32,3 +32,8 @@ https://kubernetes.io/docs/user-guide/services/#external-ips
 
 # kubenetes mysql 
 https://kubernetes.io/docs/tutorials/stateful-application/run-replicated-stateful-application/
+
+# kubernetes and flocker
+https://clusterhq.com/2015/04/24/data-migration-kubernetes-flocker/
+https://clusterhq.com/2015/12/22/ha-demo-kubernetes-flocker/
+https://github.com/kubernetes/kubernetes/tree/master/examples/volumes/flocker

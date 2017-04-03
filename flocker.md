@@ -54,7 +54,7 @@ curl --cacert /etc/flocker/cluster.crt --cert /home/hoannv/hoannv-flocker.crt --
 ```
 
 # Configuring the Nodes and Storage Backends
-##k8s-master
+## k8s-master
 ```
 install repo openvstorage
 wget ftp://bo.mirror.garr.it/1/centos/7.3.1611/cloud/x86_64/openstack-liberty/common/zeromq-4.0.5-4.el7.x86_64.rpm
@@ -62,7 +62,7 @@ rpm -Uvh zeromq-4.0.5-4.el7.x86_64.rpm
 yum install blktap-utils.x86_64 blktap.x86_64 kmod-blktap.x86_64
 ```
 
-##k8s-minion
+## k8s-minion
 ```
 vi /etc/flocker/agent.yml
 
@@ -80,4 +80,50 @@ vi /etc/flocker/agent.yml
 
 
 scp  /etc/flocker/agent.yml k8s-minion2:/etc/flocker/
+```
+
+## k8s-minion
+```
+cd /etc/flocker
+cp /home/hoannv/hoannv-flocker.crt apiuser.crt
+cp /home/hoannv/hoannv-flocker.key apiuser.key
+```
+
+edit file /etc/systemd/system/multi-user.target.wants/kubelet.service add line
+```
+EnvironmentFile=-/etc/flocker/env
+```
+
+edit file /etc/flocker/env
+```
+FLOCKER_CONTROL_SERVICE_HOST=k8s-master
+FLOCKER_CONTROL_SERVICE_PORT=4523
+FLOCKER_CONTROL_SERVICE_CA_FILE=/etc/flocker/cluster.crt
+FLOCKER_CONTROL_SERVICE_CLIENT_KEY_FILE=/etc/flocker/apiuser.key
+FLOCKER_CONTROL_SERVICE_CLIENT_CERT_FILE=/etc/flocker/apiuser.crt
+```
+
+Restart service kubelet
+```
+systemctl restart kubelet
+systemctl daemon-reload
+```
+
+install blktap
+```
+echo '[openvstorage]
+name=OVS repo
+baseurl=http://yum.openvstorage.org/CentOS/7/x86_64/dists/fargo
+enabled=1
+gpgcheck=0' > /etc/yum.repos.d/ovs.repo
+
+yum install zeromq -y
+rpm -e zeromq-4.1.4-5.el7.x86_64
+rpm -Uvh /home/hoannv/zeromq-4.0.5-4.el7.x86_64.rpm
+yum install blktap.x86_64 blktap-utils.x86_64 kmod-blktap.x86_64 -y
+```
+
+test flocker
+```
+/opt/flocker/bin/trial openvstorage_tests.py
 ```

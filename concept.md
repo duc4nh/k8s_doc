@@ -1,5 +1,3 @@
-
-
 # ReplicationController :  
 ```
 A ReplicationController ensures that a specified number of pod “replicas” are running at any one time.
