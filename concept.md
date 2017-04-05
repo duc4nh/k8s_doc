@@ -320,4 +320,10 @@ Updating an existing StatefulSet is currently a manual process
     + ReadWriteMany – the volume can be mounted as read-write by many nodes
 + Important! A volume can only be mounted using one access mode at a time, even if it supports many. 
 
-- 
+- Ingress
++ An Ingress is a collection of rules that allow inbound connections to reach the cluster services.
++ It can be configured to give services externally-reachable urls, load balance traffic, terminate SSL, offer name based virtual hosting etc. Users request ingress by POSTing the Ingress resource to the API server.
+
+- Network policy
++ Isolation can be configured on a per-namespace basis. Once isolation is configured on a namespace it will be applied to all pods in that namespace. Currently, only isolation policy on inbound traffic (ingress) can be defined.
++ https://kubernetes.io/docs/concepts/services-networking/networkpolicies/
