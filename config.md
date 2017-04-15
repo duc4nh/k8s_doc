@@ -37,3 +37,17 @@ https://kubernetes.io/docs/tutorials/stateful-application/run-replicated-statefu
 https://clusterhq.com/2015/04/24/data-migration-kubernetes-flocker/
 https://clusterhq.com/2015/12/22/ha-demo-kubernetes-flocker/
 https://github.com/kubernetes/kubernetes/tree/master/examples/volumes/flocker
+
+
+
+for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler flanneld kube-scheduler; do systemctl restart $SERVICES;systemctl enable SERVICES;systemctl status $SERVICES;done
+    
+for SERVICES in kube-proxy kubelet flanneld docker; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES;
+done
+
+
+bash make-ca-cert.sh "10.3.105.202" "IP:10.3.105.202,IP:10.254.0.1,DNS:kubernetes,DNS:kubernetes.default,DNS:kubernetes.default.svc,DNS:kubernetes.default.svc.cluster.local"
+
+./make-ca-cert.sh 192.168.127.100 IP:192.168.127.100,IP:10.0.0.1,DNS:kubernetes,DNS:kubernetes.default,DNS:kubernetes.default.svc,DNS:kubernetes.default.svc.cluster.local
+
+chmod 777 /srv/kubernetes/ca.crt

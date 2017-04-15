@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  annotations:
+    volume.beta.kubernetes.io/storage-class: ceph-storage
+spec:
+  capacity:
+    storage: 30Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  rbd:
+    monitors: 
+      - 10.3.105.11:6789
+      - 10.3.105.12:6789
+      - 10.3.105.130:6789
+    pool: k8s-pool
+    image: myvol
+    user: k8s
+    secretRef: 
+      name: ceph-secret
+    fsType: ext4
+    readOnly: false
+
