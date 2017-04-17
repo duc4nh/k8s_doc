@@ -9,3 +9,8 @@ http://www.dasblinkenlichten.com/kubernetes-authentication-plugins-and-kubeconfi
 http://docs.iorchard.co.kr/kubic/k8s_tls_howto
 
 http://www.tothenew.com/blog/how-to-install-kubernetes-on-centos/
+
+
+for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler flanneld; do systemctl restart $SERVICES; systemctl enable SERVICES; systemctl status $SERVICES; done
+
+for SERVICES in kube-proxy kubelet flanneld docker; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES;done

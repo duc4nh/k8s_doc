@@ -6,4 +6,6 @@ Các server kubelet cần cài thêm package
 yum install libgudev1.x86_64
 
 
+http://blog.kubernetes.io/2016/10/dynamic-provisioning-and-storage-in-kubernetes.html
 
+http://blog.kubernetes.io/2017/03/dynamic-provisioning-and-storage-classes-kubernetes.html

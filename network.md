@@ -1,6 +1,11 @@
 # Link compare network
 
 ```
+
+http://www.dasblinkenlichten.com/kubernetes-101-external-access-into-the-cluster/
+http://blog.kubernetes.io/2015/10/some-things-you-didnt-know-about-kubectl_28.html
+
+
 http://chunqi.li/2015/11/15/Battlefield-Calico-Flannel-Weave-and-Docker-Overlay-Network/
 https://github.com/projectcalico/canal
 

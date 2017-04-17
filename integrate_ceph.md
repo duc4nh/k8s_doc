@@ -76,3 +76,7 @@ So on a ceph-mon:
 sudo ceph auth get-key client.admin | base64
 
 and put that value in your ceph-secret.
+
+
+http://ceph.com/geen-categorie/bring-persistent-storage-for-your-containers-with-krbd-on-kubernetes/
+https://sysdig.com/blog/ceph-persistent-volume-for-kubernetes-or-openshift/
