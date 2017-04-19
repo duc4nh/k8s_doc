@@ -1,96 +1,108 @@
+
 # Architecture 
 
 ![alt text](architecture/architecture.png?raw=true "Architecture kubernetes")
 
+
 Trong hình architecture có bao gồm etcd nhưng etcd k nằm trong kubernetes mà là key-value store.
 
-## Master node
-Là cluster control plane của kuberentes.
 
-Master cung cấp REST API cho các thao tác CRUD của các resource : Pods, Service, ReplicateController...
+## Master node
+
+- Là cluster control plane của kuberentes.
+
+- Master cung cấp REST API cho các thao tác CRUD của các resource : Pods, Service, ReplicateController...
 
 ### API Server
-API Server cung cấp chức năng cơ bản của api.
 
-* REST semantics, watch, durability and consistency guarantees, API versioning, defaulting, and validation
-* Built-in admission-control semantics, synchronous admission-control hooks, and asynchronous resource initialization
-* API registration and discovery
+- API Server cung cấp chức năng cơ bản của api: 
 
-Ngoài ra API server còn là gateway cho cluster.
+    * REST semantics, watch, durability and consistency guarantees, API versioning, defaulting, and validation
+    * Built-in admission-control semantics, synchronous admission-control hooks, and asynchronous resource initialization
+    * API registration and discovery
 
-Tất cả data persistence được lưu trong etcd (key-value store).
+- Ngoài ra API server còn là gateway cho cluster.
 
-Kube-api được document theo swagger 1.2 và OpenAPI. Location cho kube-api là /swaggerapi.
-Kube-api có thể được vieu trực tiếp bằng cách thêm tham số --enable-swagger-ui=true vào api-server.
+- Tất cả data persistence được lưu trong etcd (key-value store).
 
-Khi cài đặt api server có service là kube-apiserver. File config /etc/kubernetes/api-server.
+- Kube-api được document theo swagger 1.2 và OpenAPI. Location cho kube-api là /swaggerapi.
+- Kube-api có thể được vieu trực tiếp bằng cách thêm tham số --enable-swagger-ui=true vào api-server.
+
+- Khi cài đặt api server có service là kube-apiserver. File config /etc/kubernetes/api-server.
 
 ### Controller-Manager Server
-Controller thực hiện các chức năng ở cluster-level.
 
-Thông qua api controller-manager chuyển trạng thái hiện tại thành trạng thái để mong đợi (move the current state towards the desired state.)
+- Controller thực hiện các chức năng ở cluster-level.
 
-Chức năng quản lý lifecycle : thêm, sửa, xóa, event gc và các api business logic (scale pods..)
+- Thông qua api controller-manager chuyển trạng thái hiện tại thành trạng thái để mong đợi (move the current state towards the desired state.)
 
-Controller-manager cài đặt trên OS có service là kube-controller-manager
-File config /etc/kubernetes/controller-manager
+- Chức năng quản lý lifecycle : thêm, sửa, xóa, event gc và các api business logic (scale pods..)
+
+- Controller-manager cài đặt trên OS có service là kube-controller-manager
+- File config /etc/kubernetes/controller-manager
 
 ### Scheduler
-Scheduler watch unscheduled pods và bind vào các kube node.
 
-Việc binding dựa vào các tham số : tài nguyên yêu cầu, số lượng service, các spec và các constraint.
+- Scheduler watch unscheduled pods và bind vào các kube node.
 
-Kube-scheduler cài đặt trên OS có service là kube-scheduler
+- Việc binding dựa vào các tham số : tài nguyên yêu cầu, số lượng service, các spec và các constraint.
 
-File config /etc/kubernetes/scheduler
+- Kube-scheduler cài đặt trên OS có service là kube-scheduler
+
+- File config /etc/kubernetes/scheduler
+
 
 ## The Kubernetes Node
 
-Node có service để run container và đưuọc quản lý bởi kubenetes master.
+- Node có service để run container và đưuọc quản lý bởi kubenetes master.
 
 ### Kubelet
-Là node agent trên từng node.
 
-Kubelet phải register với master node bằng cách cấu hình với api-master/
+- Là node agent trên từng node.
 
-Khi tạo container scheduler thông qua kubelet xác định các tài nguyên có trong node đó. Nếu phù hợp điều kiện sẽ thực hiện tạo container trong node đó.
+- Kubelet phải register với master node bằng cách cấu hình với api-master/
 
-Kubelet cài đặt trên OS có service là kubelet
+- Khi tạo container scheduler thông qua kubelet xác định các tài nguyên có trong node đó. Nếu phù hợp điều kiện sẽ thực hiện tạo container trong node đó.
 
-File config /etc/kubernetes/kubelet
+- Kubelet cài đặt trên OS có service là kubelet
+
+- File config /etc/kubernetes/kubelet
 
 ### Container runtime
-Container runtime sẽ download image và running container.
 
-Kubelet không link tới base container runtime mà sẽ định nghĩa Container Runtime Interface để control underlying runtime.
+- Container runtime sẽ download image và running container.
 
-Runtime support hiện tại bao gồm docker, rkt, cro-o, frakti
+- Kubelet không link tới base container runtime mà sẽ định nghĩa Container Runtime Interface để control underlying runtime.
+
+- Runtime support hiện tại bao gồm docker, rkt, cro-o, frakti
 
 ### Kube Proxy
-Kube proxy group các pods với nhau dưới 1 common access policy.
 
-Proxy sẽ tạo 1 VIP client có thể truy cập.
+- Kube proxy group các pods với nhau dưới 1 common access policy.
 
-Mỗi node run kube-proxy có một iptables trap access và redirect tới các backend.
+- Proxy sẽ tạo 1 VIP client có thể truy cập.
 
-Kube Proxy cài đặt trên OS có service là kube-proxy
+- Mỗi node run kube-proxy có một iptables trap access và redirect tới các backend.
 
-File config /etc/kubernetes/proxy
+- Kube Proxy cài đặt trên OS có service là kube-proxy
+
+- File config /etc/kubernetes/proxy
 
 # Distributed Watchable Storage
-Như trong hình có 1 phần không thuộc về architecture của kubernetes là etcd
 
-Etcd là distributed key-value store. Etcd là thành phần chính của kubernetes, lưu trữ và replicate cluster state của kubenetes
+- Như trong hình có 1 phần không thuộc về architecture của kubernetes là etcd
 
-Etcd hoạt động theo 3 bước
+- Etcd là distributed key-value store. Etcd là thành phần chính của kubernetes, lưu trữ và replicate cluster state của kubenetes
 
-+ Observe : kiểm tra trạng thái hiện tại thông qua api server
-+ Analyze : tìm sự khác nhau giữa curent statue với desired state
-+ Act : Thực hiện các lệnh fix sự khác nhau đó
+- Etcd hoạt động theo 3 bước
 
-Etcd cài đặt trên OS có service là etcd
+    + Observe : kiểm tra trạng thái hiện tại thông qua api server
+    + Analyze : tìm sự khác nhau giữa curent statue với desired state
+    + Act : Thực hiện các lệnh fix sự khác nhau đó
 
-File config /etc/etcd/etcd.conf
+- Etcd cài đặt trên OS có service là etcd
+
+- File config /etc/etcd/etcd.conf
 
 
 
