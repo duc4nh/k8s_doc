@@ -2,6 +2,7 @@
 Kiến trúc của kubernetes
 
 Các thành phần trong master node và agent node.
+
 [Architecture ](architecture.md.md)
 
 # 2. Mố số khai niệm cơ bản
