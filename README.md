@@ -15,12 +15,17 @@ Cài đặt và cấu hình 1 master 2 worker node trên CentOS
 
 [Instal and config ](config.md)
 
-# 4. Network trong kubernetes
+# 4. Mộ số lệnh quản trị kubernetes
+Một số lệnh quản trị kubernetes: thêm sửa xóa các tài nguyên, view log, debug 
+
+[Instal and config ](config.md)
+
+# 5. Network trong kubernetes
 Cài đặt một số network ngoài flannel
 
 [Network ](network.md)
 
-# 5. Storage class, Persistence Volume, Persistence Volume Claim
+# 6. Storage class, Persistence Volume, Persistence Volume Claim
 Tích hợp một số storage CEPH, Cinder-Volume, qua Flocker
 
 [Storage ](storage.md)
