@@ -32,7 +32,7 @@ http://blog.octo.com/en/how-does-it-work-kubernetes-episode-2-kubernetes-network
 # kubernetes-calico
 ```
 http://docs.projectcalico.org/v2.1/getting-started/kubernetes/installation/integration
-
+http://leebriggs.co.uk/blog/2017/02/18/kubernetes-networking-calico.html
 ```
 
 # kubernetes-trireme

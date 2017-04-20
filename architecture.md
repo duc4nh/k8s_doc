@@ -7,7 +7,7 @@
 Trong hình architecture có bao gồm etcd nhưng etcd k nằm trong kubernetes mà là key-value store.
 
 
-## Master node
+## 1. Master node
 
 - Là cluster control plane của kuberentes.
 
@@ -52,7 +52,7 @@ Trong hình architecture có bao gồm etcd nhưng etcd k nằm trong kubernetes
 - File config /etc/kubernetes/scheduler
 
 
-## The Kubernetes Node
+## 2. The Kubernetes Node
 
 - Node có service để run container và đưuọc quản lý bởi kubenetes master.
 
@@ -87,6 +87,7 @@ Trong hình architecture có bao gồm etcd nhưng etcd k nằm trong kubernetes
 - Kube Proxy cài đặt trên OS có service là kube-proxy
 
 - File config /etc/kubernetes/proxy
+
 
 # Distributed Watchable Storage
 
