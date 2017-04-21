@@ -18,7 +18,7 @@ Cài đặt và cấu hình 1 master 2 worker node trên CentOS
 # 4. Mộ số lệnh quản trị kubernetes
 Một số lệnh quản trị kubernetes: thêm sửa xóa các tài nguyên, view log, debug 
 
-[Instal and config ](config.md)
+[Instal and config ](administrator.md)
 
 # 5. Network trong kubernetes
 Cài đặt một số network ngoài flannel

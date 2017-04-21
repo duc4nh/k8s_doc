@@ -86,3 +86,23 @@ http://www.opencontrail.org/i-studied-opencontrail/
 ```
 
 # So sánh
+
+
+
+# bug ssl nginx
+
+https://github.com/kubernetes/kubernetes/issues/42987
+
+# k8s external access cluster
+http://www.dasblinkenlichten.com/kubernetes-101-external-access-into-the-cluster/
+
+https://kubernetes.io/docs/user-guide/services/#external-ips
+
+
+# kubenetes mysql 
+https://kubernetes.io/docs/tutorials/stateful-application/run-replicated-stateful-application/
+
+# kubernetes and flocker
+https://clusterhq.com/2015/04/24/data-migration-kubernetes-flocker/
+https://clusterhq.com/2015/12/22/ha-demo-kubernetes-flocker/
+https://github.com/kubernetes/kubernetes/tree/master/examples/volumes/flocker

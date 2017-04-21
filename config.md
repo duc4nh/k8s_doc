@@ -272,7 +272,7 @@ kubectl get secret
 NAME                  TYPE                                  DATA      AGE
 default-token-8rbj6   kubernetes.io/service-account-token   3         7d
 
-Token được tạo ra và DATA phải có số lớn hơn 1
+Token được tạo ra và DATA phải có số lớn hơn 0
 ```
 
 Xem thông tin secret khi được truyền vào trong pod
@@ -308,7 +308,7 @@ https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 pod-name.default.svc.cluster.local
 ```
 
-### Tạo pod dns
+### Cấu hình dns (tạo pod dns)
 ```
 wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/dns/skydns-rc.yaml.in
 wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/dns/skydns-svc.yaml.in
@@ -338,68 +338,62 @@ kubectl create -f skydns-rc.yaml.in
 kubectl create -f skydns-svc.yaml.in
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-# Config skydns
-
+### Cấu hình kubelet nhận dns
+Như cấu hình ở tren dns server có ip là 10.254.3.100, các kubelet cần cấu hình nhận  dns server.
+Edit file /etc/kubernetes/kubelet ở tất cả các worker node.
 ```
-Trong container kubedns phần args phải chỉ định tham số cho kube-master-url ví dụ như 
---kube-master-url=http://172.16.86.162:8080
-
-issue skydns
-https://github.com/kubernetes/kubernetes/issues/42243
-
-
-http://www.marcolenzo.eu/create-a-kubernetes-cluster-on-centos-7/
+Thêm vào tham số KUBELET_ARGS option "--cluster-dns=10.254.3.100" ( không có dấu "")
+```
+Một số trường hợp kubenretes không nhận dns nếu chỉ set cluster-dns. Khi đó cần thêm tham số --cluster-domain 
+```
+Thêm vào tham số KUBELET_ARGS option "--cluster-domain=cluster.local" ( không có dấu "")
 ```
 
-# config secret kubernetes 1.5
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/nginx.key -out /tmp/nginx.crt -subj "/CN=nginxsvc/O=nginxsvc"
-kubectl create secret tls nginxsecret --key /tmp/nginx.key --cert /tmp/nginx.crt
+### Test dns
+Tạo 1 pod dns sử dụng lệnh
+```
+kubectl create -f busybox
+```
+
+Sử dụng lệnh trực tiếp của busybox
+
+```
+kubectl exec -it busybox -- nslookup kubernetes
+
+[root@hoannv-k8s-master dns]# kubectl exec -it busybox -- nslookup kubernetes
+Server:    10.254.3.100
+Address 1: 10.254.3.100 kube-dns.kube-system.svc.cluster.local
+
+Name:      kubernetes
+Address 1: 10.254.0.1 kubernetes.default.svc.cluster.local
+
+Nếu phân gải được hostname kubernetes thì dns cài đạt được
+Nếu không phân giải được thì có thể view log của từng pod để kiểm tra
+
+kubectl logs --namespace=kube-system $(kubectl get pods --namespace=kube-system -l k8s-app=kube-dns -o name) -c kubedns
+kubectl logs --namespace=kube-system $(kubectl get pods --namespace=kube-system -l k8s-app=kube-dns -o name) -c dnsmasq
+kubectl logs --namespace=kube-system $(kubectl get pods --namespace=kube-system -l k8s-app=kube-dns -o name) -c healthz
+```
 
 
-$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $(KEY) -out $(CERT) -subj "/CN=nginxsvc/O=nginxsvc"
-$ kubectl create secret tls nginxsecret --key /tmp/nginx.key --cert /tmp/nginx.crt
+### Cài đặt dashboard (tạo pod dashboard và )
+Dashboard bao gồm các thành phần
 
+- Dashboard : dashboard chính
+- Heapster : discovers tất cả các node trong cluster và thực hiện query tất cả các thông tin càn thiết trong kubelet
+- Influxdb : quản lý time series data
+- Grafana : visualization và monitoring data lấy từ influxdb
 
-# bug ssl nginx
+Trong guide này hướng dẫn cài đặt dashboard và heapster để xem được Admin và monitor một số thông tin của kubernetes. Việc cài đặt khá dễ dàng chỉ cần get các file yaml về và create.
+```
+wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/dashboard/dashboard-controller.yaml
+wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/dashboard/dashboard-service.yaml
+wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/cluster-monitoring/google/heapster-controller.yaml
+wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/cluster-monitoring/standalone/heapster-controller.yaml
 
-https://github.com/kubernetes/kubernetes/issues/42987
-
-# k8s external access cluster
-http://www.dasblinkenlichten.com/kubernetes-101-external-access-into-the-cluster/
-
-https://kubernetes.io/docs/user-guide/services/#external-ips
-
-
-# kubenetes mysql 
-https://kubernetes.io/docs/tutorials/stateful-application/run-replicated-stateful-application/
-
-# kubernetes and flocker
-https://clusterhq.com/2015/04/24/data-migration-kubernetes-flocker/
-https://clusterhq.com/2015/12/22/ha-demo-kubernetes-flocker/
-https://github.com/kubernetes/kubernetes/tree/master/examples/volumes/flocker
-
-
-
-for SERVICES in etcd kube-apiserver kube-controller-manager kube-scheduler flanneld kube-scheduler; do systemctl restart $SERVICES;systemctl enable SERVICES;systemctl status $SERVICES;done
-    
-for SERVICES in kube-proxy kubelet flanneld docker; do systemctl restart $SERVICES; systemctl enable $SERVICES; systemctl status $SERVICES;
-done
-
-
-bash make-ca-cert.sh "10.3.105.202" "IP:10.3.105.202,IP:10.254.0.1,DNS:kubernetes,DNS:kubernetes.default,DNS:kubernetes.default.svc,DNS:kubernetes.default.svc.cluster.local"
-
-./make-ca-cert.sh 192.168.127.100 IP:192.168.127.100,IP:10.0.0.1,DNS:kubernetes,DNS:kubernetes.default,DNS:kubernetes.default.svc,DNS:kubernetes.default.svc.cluster.local
-
-chmod 777 /srv/kubernetes/ca.crt
+kubectl create -f dashboard-controller.yaml
+kubectl create -f dashboard-service.yaml
+kubectl create -f heapster-controller.yaml
+kubectl create -f heapster-controller.yaml
+```
+Sau khi cài xong truy cập vào link http://<master-ip>:<master-port>/ui  : http://10.3.105.202:8080/ui để vào dashboard
