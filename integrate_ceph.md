@@ -1,10 +1,12 @@
 # 1.Cài đăt ceph
+
 ## Tạo user k8s và pool là k8s-pool và phân quyền cho user k8s trên pool k8s-pool
 ```
 ceph osd pool create k8s-pool 64 64 replicated
 ceph auth get-or-create client.k8s mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=k8s-pool'
 ```
 # 2.Cấu hình tích hợp kubernetes và ceph
+
 ## 2.1 Tạo secrets
 Key trong secret là base64 của key auth user k8s
 ```
@@ -31,7 +33,7 @@ data:
   key: QVFCb3N0eFlBTTBZTVJBQUVBYjdFcDY5YmxjdFBSeERwSkRwYXc9PQ==
 ```
 ## 2.2 Tạo storage class
-Với thông tin trên của ceph và 
+Với thông tin trên của ceph tạo 1 storage class
 ```
 apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
@@ -51,8 +53,8 @@ parameters:
   userSecretName: ceph-secret
 ```
 
-# 3. Cấu hình ứng dụng sử dụng ceph 
-Ví dụ với ứng dụng mysql 
+# 3. Cấu hình ứng dụng sử dụng ceph
+- Dynamic Provisioning : Ví dụ với ứng dụng mysql 
 ```
 volumeClaimTemplates:
 - metadata:
@@ -67,6 +69,8 @@ spec:
 ```
 Với tham số volumeClaimTemplates  ứng dụng mysql sẽ tạo persistence volume và persistence volume claim động 
 (có bao nhiêu node sẽ tạo ra tương ứng số PV,PVC)
+
+- Static Provisioning
 
 https://arpnetworks.com/blog/2016/08/26/fixing-ceph-rbd-map-failed-6-no-such-device-or-address.html
 
