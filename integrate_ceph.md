@@ -60,7 +60,7 @@ volumeClaimTemplates:
 - metadata:
     name: data
     annotations:
-    volume.beta.kubernetes.io/storage-class: ceph-storage
+      volume.beta.kubernetes.io/storage-class: ceph-storage
 spec:
     accessModes: ["ReadWriteOnce"]
     resources:
@@ -70,17 +70,55 @@ spec:
 Với tham số volumeClaimTemplates  ứng dụng mysql sẽ tạo persistence volume và persistence volume claim động 
 (có bao nhiêu node sẽ tạo ra tương ứng số PV,PVC)
 
-- Static Provisioning
+- Static Provisioning : Static yêu cầu tạo persistece volume và persisence volume claim.
+  + Persistence volume
+  ```
+  rbd create ceph-pv --size 2 -p k8s-pool
+  ```
+  Ceph persistece volume : Cấu hình đầy đủ thông tin của ceph : monitor server, user, secret, pool, image ...
+  ```
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: ceph-pv-volume
+    annotations:
+      volume.beta.kubernetes.io/storage-class: "ceph-storage"
+  spec:
+    capacity:
+      storage: 30Gi
+    accessModes:
+      - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Recycle
+    rbd:
+      monitors:
+        - 10.3.105.11:6789
+        - 10.3.105.12:6789
+        - 10.3.105.130:6789
+      pool: k8s-pool
+      image: ceph-pv
+      user: k8s
+      secretRef:
+        name: ceph-secret
+      fsType: ext4
+      readOnly: false
+  ```
+  Ceph persistece volume claim : có annotation giống với persistece volume
+  ```
+  kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: ceph-pvc
+    annotations:
+      volume.beta.kubernetes.io/storage-class: "ceph-storage"
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 10Gi
+  ```
 
+# Link tham khảo
 https://arpnetworks.com/blog/2016/08/26/fixing-ceph-rbd-map-failed-6-no-such-device-or-address.html
-
-I was getting "rbd: map failed fork/exec /usr/bin/rbd: invalid argument" as well. I fixed it by encoding the ceph secret with base64.
-
-So on a ceph-mon:
-sudo ceph auth get-key client.admin | base64
-
-and put that value in your ceph-secret.
-
-
 http://ceph.com/geen-categorie/bring-persistent-storage-for-your-containers-with-krbd-on-kubernetes/
 https://sysdig.com/blog/ceph-persistent-volume-for-kubernetes-or-openshift/

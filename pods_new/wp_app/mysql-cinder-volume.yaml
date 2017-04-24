@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-cinder-volume
+  labels:
+    volume: mysql-app
+  annotations:
+    volume.beta.kubernetes.io/storage-class: cinder-volume
+spec:
+  capacity:
+    storage: 32Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  cinder:
+    fsType: ext4
+    volumeID: ef213b16-dfce-401f-809b-c0d72971b087
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: wp-cinder-volume
+  labels:
+    volume: wp-app
+  annotations:
+    volume.beta.kubernetes.io/storage-class: cinder-volume
+spec:
+  capacity:
+    storage: 32Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  cinder:
+    fsType: ext4
+    volumeID: 58cf7820-a99d-4277-b2cc-bb99fb308fbb

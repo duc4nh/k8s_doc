@@ -1,3 +1,28 @@
+# Cluster Networking
+- Kubernetes có 4 vấn đền network cần giải quyết
+    + Container-to-container : được giải quyết bằng localhost commmunication
+    + Pod to pod commmunication : mõi Pod được gán 1 IP ở trong  flat shared networking namespace.
+    + Pod to service communication : service được gán Virtual IP, client truy cập qua qua transparently proxied tới các Pod group. Request được đi qua kube-proxy.
+    + External-to-Internal Communication : truy cập service từ bên ngoài bằng cách cấu hình external loadbalancer target tất cả các host. Traffiec đi vào 1 node sẽ dược route tới service backend qua Kube-proxy.
+- Một số network
+```
+Contiv
+Contrail
+Flannel
+Google Compute Engine (GCE)
+L2 networks and linux bridging
+Nuage Networks VCS (Virtualized Cloud Services)
+OpenVSwitch
+OVN (Open Virtual Networking)
+Project Calico
+Romana
+Weave Net from Weaveworks
+```
+
+# Compare some networks
+
+
+
 # Link compare network
 
 ```

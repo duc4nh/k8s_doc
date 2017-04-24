@@ -11,4 +11,10 @@
     + Dynamic Provisioning : với loại này volume ở dạng template, mặc định sẽ được xóa đi nếu Pod bị xóa.
     + Static Provisioning : volume này sẽ không bị xóa khi Pod bị xóa.
 
-# 
+# [CEPH](integrate_ceph.md)
+
+# [OpenStack Cinder (cloud-provider)](integrate_openstack_cinder.md)
+
+# [Storage flocker](integrate_flocker.md)
+
+# [ScaleioIO](integrate_scaleio_1.6.md)
