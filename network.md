@@ -20,16 +20,176 @@ Weave Net from Weaveworks
 ```
 
 # Compare some networks
+- So sánh một số network.
+```
+http://chunqi.li/2015/11/15/Battlefield-Calico-Flannel-Weave-and-Docker-Overlay-Network/
+http://blog.kubernetes.io/2016/09/high-performance-network-policies-kubernetes.html
+https://www.projectcalico.org/project-calico-needs-to-communicate-better/
+```
+
+![alt text](network/compare_network.png?raw=true "Compare some networks")
+
+# Ingress Resources
+
+## Một vài thuật ngữ
+- Node máy ảo hoặc máy chủ vật lý trong Kuberetes cluster.
+- Cluster : nhóm các node được nằm trong firewall.
+- Edge router : một router bắt buộc firewall policy ở trong cluster. Có thể là gateway của cloudprovider hoặc là fireall cứng
+- Cluster network : bộ các links, logical hay physical, liên kết cluster to kubernetes network mode. Ví dụ là cluster network bao gồm overlay như flannel hoặc SDN (OVS).
+- Service : kubernetes service xác định nhóm 
+
+## Ingress là gì 
+- Ingress là tập hơp các rules cho phép các inbound connection tới cluster service.
+```
+internet
+    |
+[ Ingress ]
+--|-----|--
+[ Services ]
+``` 
+- Ingress có thể được coi như : services externally-reachable urls, load balance traffic, terminate SSL, offer name based virtual hosting 
+- User request ingress bằng cách POST ingress reosource tới API. Ingress Controller ( 1 phần trong kube-controller-manager) sẽ phản hồi lại.
+- Ingress Sample
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        backend:
+          serviceName: test
+          servicePort: 80
+```
+
+## Type of Ingress 
+
+### Single Service Ingress
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+spec:
+  backend:
+    serviceName: testsvc
+    servicePort: 80
+```
+
+- Expose service testsvc qua port 80
 
 
+### Simple fanout
+- Có thể nhận ingress traffic và proxy tới đúng endpoints ví dụ.
+```
+foo.bar.com -> 178.91.123.132 -> / foo    s1:80
+                                 / bar    s2:80
+```
+
+- Ingress sẽ được cấu hình
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test
+spec:
+  rules:
+  - host: foo.bar.com
+    http:
+      paths:
+      - path: /foo
+        backend:
+          serviceName: s1
+          servicePort: 80
+      - path: /bar
+        backend:
+          serviceName: s2
+          servicePort: 80
+```
+
+### Name based virtual hosting
+- Sử dụng ingress traffic dựng vào hostname và proxy tới đúng nơi.
+```
+foo.bar.com --|                 |-> foo.bar.com s1:80
+              | 178.91.123.132  |
+bar.foo.com --|                 |-> bar.foo.com s2:80
+```
+
+- Cấu hình ingress
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test
+spec:
+  rules:
+  - host: foo.bar.com
+    http:
+      paths:
+      - backend:
+          serviceName: s1
+          servicePort: 80
+  - host: bar.foo.com
+    http:
+      paths:
+      - backend:
+          serviceName: s2
+          servicePort: 80
+```
+
+### TLS 
+- Tạo TLS private key và certificate, sau đó tạo secrets
+```
+apiVersion: v1
+data:
+  tls.crt: base64 encoded cert
+  tls.key: base64 encoded key
+kind: Secret
+metadata:
+  name: testsecret
+  namespace: default
+type: Opaque
+```
+
+- Tạo ingress
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: no-rules-map
+spec:
+  tls:
+    - secretName: testsecret
+  backend:
+    serviceName: s1
+    servicePort: 80
+```
+
+# Network Policy
+
+## Network Policy là gì
+- Network policy : policy xác định các Pod có thể communicate với nhau như thế nào. Bình thường các Pod thông với nhau.
+```
+
+```
+
+Node: A single virtual or physical machine in a Kubernetes cluster.
+Cluster: A group of nodes firewalled from the internet, that are the primary compute resources managed by Kubernetes.
+Edge router: A router that enforces the firewall policy for your cluster. This could be a gateway managed by a cloudprovider or a physical piece of hardware.
+Cluster network: A set of links, logical or physical, that facilitate communication within a cluster according to the Kubernetes networking model. Examples of a Cluster network include Overlays such as flannel or SDNs such as OVS.
+Service: A Kubernetes Service that identifies a set of pods using label selectors. Unless mentioned otherwise, Services are assumed to have virtual IPs only routable within the cluster network.
+
+
+##
 
 # Link compare network
 
 ```
-
 http://www.dasblinkenlichten.com/kubernetes-101-external-access-into-the-cluster/
 http://blog.kubernetes.io/2015/10/some-things-you-didnt-know-about-kubectl_28.html
-
 
 http://chunqi.li/2015/11/15/Battlefield-Calico-Flannel-Weave-and-Docker-Overlay-Network/
 https://github.com/projectcalico/canal

@@ -389,11 +389,9 @@ Trong guide này hướng dẫn cài đặt dashboard và heapster để xem đ�
 wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/dashboard/dashboard-controller.yaml
 wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/dashboard/dashboard-service.yaml
 wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/cluster-monitoring/google/heapster-controller.yaml
-wget https://raw.githubusercontent.com/kubernetes/kubernetes/release-1.5.4/cluster/addons/cluster-monitoring/standalone/heapster-controller.yaml
 
 kubectl create -f dashboard-controller.yaml
 kubectl create -f dashboard-service.yaml
-kubectl create -f heapster-controller.yaml
 kubectl create -f heapster-controller.yaml
 ```
 Sau khi cài xong truy cập vào link http://<master-ip>:<master-port>/ui  : http://10.3.105.202:8080/ui để vào dashboard
