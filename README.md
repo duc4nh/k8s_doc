@@ -3,7 +3,7 @@ Kiến trúc của kubernetes
 
 Các thành phần trong master node và agent node.
 
-[Architecture ](architecture.md.md)
+[Architecture ](architecture.md)
 
 # 2. Mố số khai niệm cơ bản
 Một số khái niệm cơ bản trong kubernetes : pod, network và storage.
@@ -30,5 +30,6 @@ Tích hợp một số storage CEPH, Cinder-Volume, qua Flocker
 
 [Storage ](storage.md)
 
-
+# 7. Cài đặt self-hosted kubernetes trên Linux với `kubeadm`
+[Kubeadm ](kubeadm/README.md)
 
