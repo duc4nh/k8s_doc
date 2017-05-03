@@ -48,7 +48,8 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --token=...
 ```
 
 - Output master node:
-```[kubeadm] WARNING: kubeadm is in beta, please do not use it for production clusters.
+```
+[kubeadm] WARNING: kubeadm is in beta, please do not use it for production clusters.
 [init] Using Kubernetes version: v1.6.0
 [init] Using Authorization mode: RBAC
 [preflight] Running pre-flight checks
