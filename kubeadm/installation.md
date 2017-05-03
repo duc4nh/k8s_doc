@@ -75,22 +75,16 @@ kubeadm init --pod-network-cidr=10.244.0.0/16 --token=...
 [apiconfig] Created RBAC rules
 [addons] Created essential addon: kube-proxy
 [addons] Created essential addon: kube-dns
-
 Your Kubernetes master has initialized successfully!
-
 To start using your cluster, you need to run (as a regular user):
-
   sudo cp /etc/kubernetes/admin.conf $HOME/
   sudo chown $(id -u):$(id -g) $HOME/admin.conf
   export KUBECONFIG=$HOME/admin.conf
-
 You should now deploy a pod network to the cluster.
 Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
   http://kubernetes.io/docs/admin/addons/
-
 You can now join any number of machines by running the following on each node
 as root:
-
   kubeadm join --token <token> <master-ip>:<master-port>
 ```
 
